@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Responsive Page with Carousel and Joke</title>
+  <style>
+    :root {
+      --primary: #e30e8e;
+      --secondary: #320547;
+      --bg-gradient: linear-gradient(135deg, #b4f322 0%, #0fa6d0 100%);
+      --glass-bg: rgba(152, 31, 31, 0.15);
+      --glass-blur: blur(10px);
+      --text-color: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #ef0592, #0f07df);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      margin: 2rem auto;
+      padding: 2rem;
+      max-width: 800px;
+      transition: all 0.3s ease;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .carousel-buttons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    #joke-section {
+      margin-top: 2rem;
+    }
+
+    #joke {
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: #fffbe7;
+      transition: all 0.3s ease-in-out;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      button {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Responsive Design with Carousel and API</h1>
+
+  <!-- Carousel Section -->
+  <div class="card carousel">
+    <img id="carousel-img" src="https://unsplash.it/800/400?image=100" alt="Image Carousel" />
+    <div class="carousel-buttons">
+      <button onclick="prevImage()">⬅ Prev</button>
+      <button onclick="nextImage()">Next ➡</button>
+    </div>
+  </div>
+
+  <!-- Joke Section -->
+  <div class="card" id="joke-section">
+    <h2>😂 Need a Laugh?</h2>
+    <button onclick="getJoke()">Get a Dad Joke</button>
+    <p id="joke">Click the button for a random joke!</p>
+  </div>
+
+  <script>
+    // Carousel Logic
+    const images = [
+      "https://unsplash.it/800/400?image=100",
+      "https://unsplash.it/800/400?image=201",
+      "https://unsplash.it/800/400?image=250",
+      "https://unsplash.it/800/400?image=300"
+    ];
+    let index = 0;
+
+    function showImage() {
+      const img = document.getElementById("carousel-img");
+      img.style.opacity = 0;
+      setTimeout(() => {
+        img.src = images[index];
+        img.style.opacity = 1;
+      }, 300);
+    }
+
+    function nextImage() {
+      index = (index + 1) % images.length;
+      showImage();
+    }
+
+    function prevImage() {
+      index = (index - 1 + images.length) % images.length;
+      showImage();
+    }
+
+    // Joke API Logic
+    function getJoke() {
+      const jokeElement = document.getElementById('joke');
+      jokeElement.textContent = "Loading a funny one... 😄";
+      fetch('https://icanhazdadjoke.com/', {
+        headers: { Accept: 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        jokeElement.textContent = data.joke;
+      })
+      .catch(() => {
+        jokeElement.textContent = "Oops! Couldn't fetch a joke.";
+      });
+    }
+  </script>
+
+</body>
+</html>
